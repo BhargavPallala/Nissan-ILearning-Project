@@ -519,3 +519,9 @@ USE DemoNissanTest
 
 --Rename the Student Table to 'Participants'
    EXEC sp_rename 'Student','Participant'
+
+
+
+
+
+-- changing for merging two branches
