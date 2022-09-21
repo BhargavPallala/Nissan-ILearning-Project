@@ -1,0 +1,521 @@
+create database DemoNissan;
+
+--Drop Database
+DROP DATABASE DemoNissan
+
+--Current Database
+USE DemoNissan
+
+--List Of Databases -- DQL
+
+SELECT * FROM master.sys.databases
+WHERE name = 'DemoNissan'
+
+SELECT name FROM master.sys.databases
+WHERE name = 'DemoNissan'
+
+--master	---database engine
+--model		---template
+--tempdb	---startup
+
+
+--before dropping a database, you must ensure the following checked point
+	-- Take backup
+	-- Currently used database 
+
+	DROP DATABASE IF EXISTS DemoNissan
+
+	--What is Schema?
+		--A schema is a collection of database ojbects including
+		--tables, views, triggers, stored procedures, indexes, etc.
+		
+		-- A schema is associated with a username
+			-- usrename, which is known as the schema owner,
+			-- who is the owner of the logically related database objects
+
+
+--CREATE TABLE without Constraints
+	USE DemoNissan
+	CREATE TABLE product
+	(
+		--fieldName  datatype
+		procode INT,
+		proname VARCHAR(25),
+		prodescription VARCHAR(50),
+		proprice NUMERIC(7,2),
+		companycode INT
+	)
+
+
+
+--with CONSTRAINTS
+
+-- Parent Table
+	CREATE TABLE Department
+	(
+		DeptNo NUMERIC(2) PRIMARY KEY,
+		DeptName VARCHAR(20) UNIQUE,
+		FloorNo NUMERIC(2),
+		Location VARCHAR(20) 
+	)
+
+--Child Table
+
+--Employee
+CREATE TABLE Employee
+(
+	EmpNo NUMERIC(2) PRIMARY KEY,
+	ManaerID NUMERIC(3),
+	FirstName VARCHAR(20) NOT NULL,
+	LastName VARCHAR(20),
+	UserID VARCHAR(20),
+	DeptNo NUMERIC(2)
+		CONSTRAINT fk_deptno
+		FOREIGN KEY(DeptNo)
+		REFERENCES Department(DeptNo)
+		ON DELETE CASCADE,
+	Salary DECIMAL(8,2),
+	Commission NUMERIC(3),
+	JoiningDate DATE,
+	Designation VARCHAR(25)
+
+)
+
+
+CREATE SCHEMA HumanResource
+
+--Employee
+CREATE TABLE HumanResource.Employee
+(
+	EmpNo NUMERIC(2) PRIMARY KEY,
+	ManaerID NUMERIC(3),
+	FirstName VARCHAR(20) NOT NULL,
+	LastName VARCHAR(20),
+	UserID VARCHAR(20),
+	DeptNo NUMERIC(2)
+		CONSTRAINT fk_deptno
+		FOREIGN KEY(HumanResource.Employee.DeptNo)
+		REFERENCES Department(HumanResource.Employee.DeptNo)
+		ON DELETE CASCADE,
+	Salary DECIMAL(8,2),
+	Commission NUMERIC(3),
+	JoiningDate DATE,
+	Designation VARCHAR(25)
+
+)
+
+
+
+
+
+--14 Sept 2022
+
+DROP TABLE dbo.product
+
+--PRODUCT Table
+
+CREATE TABLE Product
+(
+	--FieldName DataType Size Constrint
+	ProCode INT PRIMARY KEY IDENTITY,
+	ProName VARCHAR(20),
+	ProDescription VARCHAR(20),
+	ProPrice NUMERIC(7,2),
+	ComCode INT
+)
+
+/*
+
+1 --DDL - CREATE, ALTER, DROP, TRUNCATE
+		
+		* CREATE	:	Creating any database objects like a table, view,
+						Stored Procedures etc.
+
+		* ALTER		:	To modify the structure of a database object
+
+		* DROP		:	To remove a database object
+
+		* TRUNCATE	:	To remove all records from table
+		
+2 --DML - Data Manipulation Language --- CRUD
+	-- INSERT, UPDATE, DELETE
+
+		CRUD Operations is a combination of DML & DQL/DRL
+		 C - CREATE --- INSERT
+		 R - READ	--- SELECT
+		 U - UPDATE --- UPDATE
+		 D - DELETE --- DELETE
+
+3 -- DQL - Data Query Langugage / Data Retrieval Language
+	
+		* SELECT
+
+4 -- DCL - Data Control Language
+
+		* GRANT
+		* REVOKE
+
+5 -- TCL - Transaction Control Language
+
+		* COMMIT
+		* ROLLBACK
+
+*/
+
+
+
+
+-- CREATING DATABASE
+	CREATE DATABASE DemoNissanTest
+
+-- ENTERING DATABASE
+	USE DemoNissanTest
+
+-- CREATING OBJECT - TABLE
+	CREATE TABLE Employees
+	(
+		EmpId INT PRIMARY KEY,
+		EmpName VARCHAR(20),
+		Department VARCHAR(20)
+	)
+
+-- Listing all Databses
+	SELECT name, database_id, create_date
+	FROM sys.databases
+	ORDER BY database_id DESC
+
+
+-- INSERTING RECORD -- INSERT COMMAND
+	INSERT INTO Employees(EmpId, EmpName, Department)
+	VALUES(1001,'Safdar','IT')
+
+	INSERT INTO Employees
+	VALUES(1003,'Akshay','HR')
+
+-- VIEW TABLE DATA
+	SELECT * FROM Employees
+--Ex 2
+
+DROP TABLE EmployeeInfo
+
+CREATE TABLE EmployeeInfo
+(
+	EmpId INT PRIMARY KEY IDENTITY,
+	EmpName VARCHAR(20),
+	Department VARCHAR(20) NOT NULL
+)
+
+--Retrieve
+	SELECT * FROM EmployeeInfo
+
+-- INSERT records
+	INSERT INTO EmployeeInfo
+	(EmpName, Department)
+	VALUES('Ravi','Administration')
+
+	INSERT INTO EmployeeInfo
+	(EmpName, Department)
+	VALUES('Hrithik',null)  --> Error
+
+	INSERT INTO EmployeeInfo
+	(EmpName, Department)
+	VALUES('Hrithik','HR')
+
+	INSERT INTO EmployeeInfo
+	(EmpName, Department)
+	VALUES('Safdar','IT'),('Ahmer','QA')
+
+
+/*
+	
+*/
+
+CREATE DATABASE DemoInventory
+
+USE DemoInventory
+
+CREATE TABLE Company
+(
+	CompCode INT PRIMARY KEY IDENTITY,
+	CompName VARCHAR(20)
+)
+
+DROP TABLE Company
+
+INSERT INTO Company
+VALUES ('Nissan')
+
+INSERT INTO Company
+VALUES ('Faith Infotech')
+
+SELECT * FROM Company
+
+CREATE TABLE Product
+(
+	ProductCode INT PRIMARY KEY IDENTITY,
+	ProductName VARCHAR(20) NOT NULL,
+	Price NUMERIC(7,2) NOT NULL,
+	ProWeight NUMERIC(7,2),
+	CompanyCode INT
+		CONSTRAINT fk_CompCode
+		FOREIGN KEY(CompanyCode)
+		REFERENCES Company(CompCode)
+		ON DELETE CASCADE
+)
+
+DROP TABLE Product
+DROP TABLE Company
+
+
+INSERT INTO Product
+VALUES ('Leaf',10000.00,990.89,1)
+
+INSERT INTO Product
+VALUES ('Magnite',10000.00,990.89,1)
+
+INSERT INTO Product
+VALUES ('LMS',10000.00,null,2)
+
+SELECT * FROM Product
+
+
+/*
+	Primary Key	:	It is used to identify a record uniquely from a table
+					It will not allow duplicate values and null value.
+
+	NOT NULL	:	It will not allow null values
+*/
+
+
+--Display current date -- yyyy-MM-dd HH:MM:SS:Ms
+	SELECT GETDATE()
+
+-- Adding a new column
+	ALTER TABLE EmployeeInfo ADD HRS DECIMAL(7,2)
+
+--Modification of existing column
+	ALTER TABLE EmployeeInfo ALTER COLUMN HRS NUMERIC(6,2)
+
+--Rename existing coulmn
+	--EXEC sp_rename 'TableName.OldName', 'NewName', 'COLUMN'
+	EXEC sp_rename 'EmployeeInfo.HRS', 'HRA', 'COLUMN'
+
+--DROP Column
+	ALTER TABLE Employee DROP COLUMN HRA
+
+--DELETE Vs. TRUNCATE
+--Search a particular record
+SELECT * FROM EmployeeInfo
+WHERE EmpId=1
+ORDER BY EmpName DESC
+
+--Delete a particular record
+DELETE FROM Employeeinfo
+WHERE EmpId=1
+
+--Delete all records
+DELETE FROM EmployeeInfo
+
+--Removing all records and keep the structure of a table
+TRUNCATE TABLE EmployeeInfo
+
+
+/*
+	--Notes:	TRUNCATE vs. DELETE
+	1 -- Use the transaction Log
+	*	The Delete statement removes rows one at a a time and inserts an entry
+		in the transaction log for each removed row.
+
+	*	TRUNCATE TABLE statement deletes the data by deallocating the data pages
+		used to store the table data and inserts only the pages deallocations
+		in the transaction logs'
+
+	2 -- Identity Reset
+	*	If the table to be truncated has an identity coulmn the counter for that
+		coulmn is reset to the seed value when data is deleted by the TRUNCATE TABLE
+		statement but NOT the DELETE statement 
+*/
+
+--RENAME OBJECT
+	EXEC sp_rename 'EmployeeInfo', 'EmployeeDetails'
+
+-- TRUNCATE Demo
+-- The Operation cannot be ROLLED BACK
+-- DROP and TRUNCATE are DDL commands, whereas DELETE is a DML command.
+-- DELETE operations can be rolled back (undo),
+-- while DROP and TRUNCATE cannot be rolled back. 
+
+
+
+--1 creating a table
+	CREATE TABLE CustomerGroup
+	(
+		GroupIf INT PRIMARY KEY IDENTITY,
+		GroupName VARCHAR(30) NOT NULL
+	)
+
+--2 inserting records
+	INSERT INTO CustomerGroup(GroupName)
+	VALUES('Intercompany'),('Third Party'),('One time')
+
+	SELECT * FROM CustomerGroup
+
+--3 performing truncate
+DELETE FROM CustomerGroup
+TRUNCATE TABLE CustomerGroup
+
+-- Add Primary Key
+	CREATE TABLE Events
+	(
+		EventId INT,
+		EventName VARCHAR(25)
+	)
+
+--Add PRIMARY KEY
+	ALTER TABLE Events ADD PRIMARY KEY(EvenId)
+
+	DROP TABLE Events
+
+/*
+
+--FOREIGN KEY Constraints
+
+--DELETE ACTION 
+	1 - ON DELETE CASCADE
+		SQL Server deletes the rows in the child table is corresponding to the
+		row deleted from the parent table
+
+	2 - ON DELETE NO ACTION
+		SQL Server riases an error an drools back 
+		the delete action on the row in the parent table
+
+	3 - ON DELETE SET NULL
+		SQL Server sets the rows in the child table to NULL
+		if the corresponding rows in the parent table are deleted.
+		To exectue this action, the foreign key column must be NULLABLE
+
+	4 - ON DELETE SET DEFAULT
+		SQL Server sets the rows in the child table to thier default values
+		if the corresponding rows in the parent table are deleted.
+		To exectue this action, the foreign key column must have DEFAULT
+		--NOTE-- that a NULLABLE column has a DEFAULT value of NULL,
+		if no default value specified
+
+	By default, SQL Server applies ON DELETE NO ACTION if you don't explicitly
+	specify any action
+
+*/	
+
+-- FOREIGN KEY
+
+--1 Create PARENT
+	CREATE TABLE VendorGroup
+	(
+		GroupId INT PRIMARY KEY IDENTITY,
+		GroupName VARCHAR(20) NOT NULL
+	)
+
+--2 inserting records
+	INSERT INTO VendorGroup(GroupName)
+	VALUES('Intercompany'),('Third Party'),('One time')
+
+--3 View Data
+	SELECT * FROM VendorGroup
+
+--4 Create CHILD
+	CREATE TABLE Vendors
+	(
+		VendorId INT PRIMARY KEY IDENTITY,
+		VendorName VARCHAR(30) NOT NULL,
+		GroupId INT  NOT NULL
+			CONSTRAINT fk_Group
+			FOREIGN KEY(GroupId)
+			REFERENCES VendorGroup(GroupId)
+	)
+
+--Insert records
+	INSERT INTO Vendors(VendorName,GroupId)
+	VALUES('ABC Company',3) --1,2,3 unless updated
+
+
+	SELECT * FROM VendorGroup
+	SELECT * FROM Vendors
+
+	DELETE FROM VendorGroup WHERE GroupId = 3
+
+--COMPOSITE KEY
+	CREATE TABLE Cars
+	(
+		CarId INT,
+		CarName VARCHAR(20),
+		ModelName VARCHAR(20),
+			CONSTRAINT pk_CompositeCars
+			PRIMARY KEY(CarId,CarName)
+	)
+
+--Insert records
+	INSERT INTO Cars VALUES(101,'Honda','City')
+	INSERT INTO Cars VALUES(101,'Tata','Aria')
+	INSERT INTO Cars VALUES(101,'WagonR','Amaze')
+
+SELECT * FROM Cars
+
+--- Assignment ---
+-- question 12 - 1
+CREATE DATABASE DemoNissanTest
+USE DemoNissanTest
+--Creating Course Table
+      Create TABLE Course
+	  (
+	      CourseId VARCHAR(5) PRIMARY KEY,
+		  StreamId VARCHAR(20),
+		  Title VARCHAR(40),
+		  CourseDesc VARCHAR(200),
+		  Fees NUMERIC(7,2),
+	  )
+
+--Creating Table - Batch
+    CREATE TABLE Batch
+	(
+	   BatchId VARCHAR(30) PRIMARY KEY,
+	   CourseId VARCHAR(5)
+	        CONSTRAINT fk_CourseId
+			FOREIGN KEY (CourseId)
+			REFERENCES Course(CourseId)
+			ON DELETE CASCADE,
+      BatchName CHAR(1)
+	)
+
+--Creating Table - Student
+    CREATE TABLE Student
+	(
+	  StuId VARCHAR(20) PRIMARY KEY,
+	  LastName VARCHAR(25),
+	  MiddleName VARCHAR(30),
+	  FirstName VARCHAR(20),
+	  Dob Date DEFAULT GETDATE(),
+	  BatchId VARCHAR(30)
+	     CONSTRAINT fk_BatchId
+		 FOREIGN KEY (BatchId)
+		 REFERENCES Batch(BatchId)
+		 ON DELETE CASCADE,
+	  Address VARCHAR(50),
+	  City VARCHAR(20),
+	  State VARCHAR(2),
+	  Zipcode VARCHAR(9),
+	  Telephone VARCHAR(10),
+	  Fax VARCHAR(10),
+	  Email VARCHAR(30),
+	  Grade CHAR(1)
+	     CONSTRAINT chk_Grade
+		 CHECK(Grade IN ('A','A+','A-','B','B+','B-','C','C+','C-','D','D+','D-','F','F+','F-'))
+	)
+
+
+
+--Remove the MiddleName Column from the Student Table
+  
+   ALTER TABLE Student DROP COLUMN MiddleName
+
+--Rename the Student Table to 'Participants'
+   EXEC sp_rename 'Student','Participant'
